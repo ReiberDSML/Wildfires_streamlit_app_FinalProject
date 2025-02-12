@@ -10,13 +10,13 @@ from sklearn.preprocessing import RobustScaler
 
 @st.cache_resource
 def load_model():
-    return load(open('..\models\modelo_xgb_ignition.sav', 'rb'))
+    return load(open('../models/modelo_xgb_ignition.sav', 'rb'))
 
 modelo = load_model()
 
 @st.cache_data
 def load_data():
-    return pd.read_csv('..\data\processed\incendio_cleaned.csv')
+    return pd.read_csv('../data/processed/incendio_cleaned.csv')
 
 df = load_data()
 
