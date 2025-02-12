@@ -16,7 +16,7 @@ modelo = load_model()
 
 @st.cache_data
 def load_data():
-    return pd.read_csv('../data/processed/incendio_cleaned.csv')
+    return pd.read_csv('../data/processed/incendio_cleaned.csv', usecols=['latitud', 'longitud', 'altitud', 'tempmaxima', 'humrelativa', 'diasultimalluvia'])
 
 df = load_data()
 
@@ -31,7 +31,7 @@ with col1:
     st.image("fireriskai.png", width=100)
 
 with col2:
-    st.title('           FireRisk AI')
+    st.title('FireRisk AI')
 
 st.write('Sistema inteligente que analiza datos ambientales en tiempo real para predecir el riesgo de ignición de un incendio forestal')
 
