@@ -1,0 +1,219 @@
+WORKFLOW FOR THE PROJECT
+
+1. Data Cleaning and Preprocessing:
+        a. Missing data, nulls, NaN.
+        b. Normalising variables.
+        c. Converting categorical data into numerical (one-hot encoding).
+
+2. Exploratory Data Analysis (EDA):
+        a. Finding correlations between variables like temperature, 
+        wind speed, and wildfire occurrence.
+        b. Visualisation of geographical distribution of wildfires.
+
+3. Feature Selection:
+        a. Variable management, combination, creation and selection
+        (i.e coordinates: combine lat and long into 1 parameter)
+        b. Focus on features with the highest correlation to the target 
+        variable (temperature, vegetation type, wind speed...).
+
+4. Model Training and Validation
+        a. Data split train/test sets.
+        b. Experimentation with diferent models and hyperparameter 
+        seleciton for optimal performance.
+
+5. Deployment:
+        a. Build a web application to visualize predictions and wildfire 
+        risk in real-time.
+
+-----------------------------------------------------------------------------------
+
+What kind of study can we do with this dataset:
+
+1. Prediction
+        X a. wildfire Risk Prediction: By using weather variables like 
+        temperature, humidity, wind speed, etc., to predict the likelihood 
+        of wildfire probability in a specific location.
+
+        b. Severity Prediction: In terms of affected area or damage, based on 
+        environmental conditions.
+
+        X c. Fire Duration Prediction: Modeling the expected duration of a 
+        wildfire based on factors like fuel type, wind speed, and 
+        suppression resources...hence how to reduce the time duration in the most efficient way.
+
+2. Clustering and Exploratory Analysis
+        a. Regional Clustering (risk management and financial management):
+        Group regions with similar wildfire profiles for efficient 
+        resource allocation and risk management.
+        b. Temporal Trends: Analyze temporal trends in wildfires to
+        identify patterns and seasonality.
+
+--------------------------------------------------------------------------------------------
+
+CONJUNTO DE DATOS Y VARIABLES SPAIN WILDFIRES -> incendios forestales ocurridos en España entre los años 1968 y 2016. (eliminar años para llegar a <100 Mb)
+Está formada por 585400 observaciones y 46 atributos que se describen a continuación.
+
+X - Se puede eliminar
+O - Considerar simplificar
+R - Reordenar y agrupar
+C - Combinar y producir una nueva variable
+
+X - idpif: código del incendio
+- anio: año
+
+Valores calculados acerca del incendio, su consulta se puede llevar a cabo en el siguiente enlace
+
+- idestadopif: indicador del incendio
+- probabilidadignicion: indicador de la probabilidad de ignición del incendio
+- idpeligro: índice de peligro categorizado en prealerta (0), alerta (1), alarma (2), alarma extrema (3)
+- idcomunidad: codificación de la comunidad autónoma, no sigue la codificación oficial del INE
+X- comunidad: denominación de la comunidad autónoma
+- idprovincia: codificación de la provincia, sigue la codificación oficial del INE
+X- provincia: denominación de la provincia
+
+Valores relacionados con la ubicación del municipio afectado con el fuego que se han cruzado con conjuntos de datos del INE y del Instituto Geográfico Nacional
+
+- municipio: nombre del municipio, se ha codificado como desconocido aquellos municipios en los que no ha sido posible obtener su codificación
+- latitud
+- longitud
+- altitud
+
+X- numminicipiosafectados: número de municipios afectados en el incendio
+- deteccion: fecha y hora de la detección del incendio
+X- extinguido: fecha y hora de la extinción del incendio
+- horadeteccion: hora de detección por tramos
+    mañana: de 6 a 12
+    tarde: de 12 a 19
+    noche: de 19 a 24
+    madrugada de 24 a 6
+
+X- mesdeteccion: mes en el que se produjo el incendio
+- duracion: días de extinción del incendio
+X- primeranotificacion112: si la primera notificación del incendio se produjo a través del 112
+- iddetectadopor: quién ha notificado la existencia del incendio
+                vigilante_fijo
+                agente_forestal
+                vigilante_movil
+                aeronave
+                llamada_particular
+                ccff_seguridad
+                stmas_automaticos
+                base_cdf
+                ejercito
+                otros
+
+(desde la línea 106 hasta 110 mirar los códigos de incendios approx. 30 tipos)
+(Y)- idcausa: código que hace referencia a la causa del incendio en el que todos aquellos códigos de 400 a 499 incluidos hacen referencia a que el incendio ha sido intencionado; el resto de los códigos se corresponden con incendios no intencionados.
+()- idmotivacion: código específico de incendios intencionados que hace referencia a la motivación que lo ha provocado
+(Y)- causa: atributo extraído de idcausa categorizado como intencionado y no_intencionado
+()- idcertidumbrecausa: valor numérico que hace referencia a si la causa es cierta (1) o supuesta (2). Aplica a todo tipo de causa, es decir, tendremos incendios intencionados, supuestamente intencionados, no intencionados y supuestamente no intencionados.
+(Y)- idcausante: si se ha identificado al causante del incendio o no, identificado (1) o no identificado (2).
+
+- idclasedia: valor categórico que distingue los tipos de días:
+                laborable
+                sábado
+                festivo
+                laborable_vispera_festivo
+
+- diasultimalluvia: días desde la última vez que llovió en la zona al inicio del incendio
+- tempmaxima: temperatura máxima en el inicio del incendio en ºC
+- humrelativa: humedad relativa en el inicio del incendio
+- velocidadviento: velocidad del viento en el inicio del incendio en km/h
+- direccionviento: dirección del viento en el inicio del incendio categorizado en N, S, E, W, NE, SE, SW, NW
+- perdidassuperficiales: total de superficie quemada en el incendio en Ha
+- clasedeincendio: atributo extraído de las perdidassuperficiales para categorizar el incendio en:
+                grandes incendios forestales (gif), mayor a 500 Ha
+                incendios, entre 1 y 500 Ha
+                conatos, menor a 1 Ha
+- numerodemediospersonal: número de personas que intervinieron en el incendio
+- numerodemediospesados: número de medios pesados que intervinieron en el incendio
+- numerodemediosaereos: número de medios aéreos que intervinieron en el incendio
+
+(mirar el dataset y ver si se obtiene información útil de la variable))- lugar: atributo que indica el lugar en el que se produjo el inicio del incendio. En esta parte el director de extinción puede marcar uno o más lugares como localización del inicio del incendio. Se ha categorizado en
+                excursionistas
+                viasferreas
+                lineaselectricas
+                vertederos
+                autoviacarretera
+                pistacamino
+                senda
+                edificaciones
+                otros
+                combinación
+()- combustible: hace referencia a los modelos de combustible existentes en la zona de inicio del incendio. Se puede marcar más de uno, por esta razón aparecerán en este atributo varias categorías únicas y combinadas en base a las categorías siguientes:
+                bosques
+                matorral
+                pastizal
+                restos
+- tipodefuego: hace referencia a la propagación del incendio. Se puede marcar más de uno, por esta razón aparecerán en este atributo varias categorías únicas y combinadas en base a las categorías siguientes:
+                superficie
+                subsuelo
+                copas
+                focos secundarios
+- tipodeataque: tipo de ataque empleado en la extinción del incendio, categorizado en:
+                directo
+                indirecto
+                combinado
+
+(Mirar si es información redundante con lat-long y si es el caso eliminar)- Coordenadas utm del punto de inicio del fuego: Sistema de proyección cartográfico basado en cuadrículas con el cual se pueden referenciar puntos sobre la superficie terrestre
+                huso
+                x
+                y
+X - iddatum
+
+----------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+1. He reducido el número total de columnas y el tamaño del archivo a bajado a 117.9 MB:
+En este primer paso han sido eliminadas 10 columnas con alto nivel de missing data: 'puntosinicioincendio', 'idgradoresponsabilidad',
+'diastormenta', 'idinvestigacioncausa', 'idautorizacionactividad', 'idnivelgravedadmaximo',
+'huso', 'x', 'y', 'iddatum'.
+
+2. A pesar de tener un alto grado de missing data (approx 50%) nos quedamos con las siguientes variables:
+'direccionviento', 'velocidadviento', 'humrelativa', 'tempmaxima', 'diasultimalluvia'
+
+Y eliminamos el resto 
+
+
+2. Simplificamos las variables con info. redundante o irrelevante:
+(X)- idcausa: código que hace referencia a la causa del incendio en el que todos aquellos códigos de 400 a 499 incluidos hacen referencia a que el incendio ha sido intencionado; el resto de los códigos se corresponden con incendios no intencionados.
+- idmotivacion: código específico de incendios intencionados que hace referencia a la motivación que lo ha provocado
+(NO EXISTE EN EL DATASET)- causa: atributo extraído de idcausa categorizado como intencionado y no_intencionado
+(X)- idcertidumbrecausa: valor numérico que hace referencia a si la causa es cierta (1) o supuesta (2). Aplica a todo tipo de causa, es decir, tendremos incendios intencionados, supuestamente intencionados, no intencionados y supuestamente no intencionados.
+- idcausante: si se ha identificado al causante del incendio o no, identificado (1) o no identificado (2).
+(X) - 'intencionalidad' está en el dataset, pero no en la lista descriptiva.
+
+        a. crear variable binaria llamada 'intencionado' a partir de 'idcausa' (0,1).
+        b. elimina 'idcausa'.
+        c. eliminar 'idcertidumbrecausa'.
+        d. eliminar 'intencionalidad', ya que tiene información no interesante y redundante presente en 'intencionado'
+
+3. Simplificación de coordenadas: Dado que las coordenadas expresadas en lat/long son mucho más usadas en GIS, medioambiental, y dataset espaciales 
+eliminaremos las coordenadas UTM.
+
+        a. eliminar huso
+        b. eliminar x
+        c. eliminar y
+        d. eliminar variable 'municipio'
+
+*Posteriormente (en el Feature engineering) o deploiment hacer una representación geográfica de las coordenadas.
+
+4. Después de limpiar las columnas mencionadas en los pasos anteriores,
+el datset 'incendios.csv' localizado en la carpeta src pesa 96.00 MB, y está listo para funcionar en modo colaborativo.
+
+        a. Duplicados
+        b. missing values
+                b.i Voy a eliminar las columnas con un % exagerado (>45% de missing) de missing values:
+                puntosinicioincendio (98%) , idgradoresponsabilidad (98%), idmotivacion (48%), diastormenta (98%), idinvestigacioncausa (98%),
+                idautorizacionactividad (98%), diasultimalluvia (65%), tempmaxima (52%), humrelativa (53%), velocidadviento (55%), direccionviento (67%),
+                idnivelgravedadmaximo (98%). -> El dataset 'incendios_reduced' queda con unas dimensiones: (585399, 26).
+
+        c. i. Variables numéricas imputadas con MEDIANA:
+        numerical_imputation = ['probabilidadignicion', 'latitud', 'longitud', 'altitud', 'idpeligro']
+           ii. Variables categóricas imputadas con MODE:
+               categorical_imputation = ['lugar', 'combustible', 'tipodefuego', 'tipodeataque']
+        Mode as a replacement: Using the mode ensures that we fill the missing values with the most common category in the column.
+        This is a sensible approach because it aligns with the majority of the data and avoids introducing uncommon or arbitrary values.
+
+
+
+        Revisar: Causa
