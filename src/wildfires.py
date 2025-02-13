@@ -122,7 +122,7 @@ if submitted:
     mesdeteccion_n = pd.factorize([mesdeteccion])[0][0]
 
 
-    user_input = np.array([[latitud, longitud, altitud_r, diasultimalluvia_r, tempmaxima_r, humrelativa_r, provincia_n, mesdeteccion_n, horadeteccion_n]])
+    user_input = np.array([[latitud, longitud, altitud_r, diasultimalluvia_r, deteccion_n, tempmaxima_r, humrelativa_r, provincia_n, mesdeteccion_n, horadeteccion_n]])
 
     prob = modelo.predict(user_input)[0]
 
