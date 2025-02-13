@@ -38,7 +38,6 @@ st.write('Sistema inteligente que analiza datos ambientales en tiempo real para 
 
 #Mapa de incendios
 
-@st.cache_data
 def generar_mapa():
     layer = pdk.Layer(
         "ScatterplotLayer",
@@ -132,7 +131,7 @@ if submitted:
     provincia_n = provincias_dict[provincia]
 
 
-    mesdeteccion_n = pd.factorize([mes])[0][0]
+    mesdeteccion_n = pd.factorize([mesdeteccion])[0][0]
 
     horadeteccion_dict = {
         "Tarde": 0,
