@@ -20,9 +20,13 @@ def load_data():
 
 df = load_data()
 
-scaler = RobustScaler() 
+@st.cache_data
+def get_scaler():
+    scaler = RobustScaler() 
+    scaler.fit(df[['altitud', 'tempmaxima', 'humrelativa', 'diasultimalluvia']])
+    return scaler
 
-scaler.fit(df[['altitud', 'tempmaxima', 'humrelativa', 'diasultimalluvia']])
+scaler = get_scaler()
 
 
 col1, col2 = st.columns([4, 8])    
@@ -37,7 +41,7 @@ st.write('Sistema inteligente que analiza datos ambientales en tiempo real para 
 
 
 #Mapa de incendios
-
+@st.cache_data
 def generar_mapa():
     layer = pdk.Layer(
         "ScatterplotLayer",
@@ -71,10 +75,10 @@ with st.form("datos usuario"):
     st.subheader('📍 Ubicación')
 
     provincias = [
-    "Álava", "Albacete", "Alicante", "Almería", "Asturias", "Ávila", "Badajoz", "Barcelona",
+    "A Coruña", "Álava", "Albacete", "Alicante", "Almería", "Asturias", "Ávila", "Badajoz", "Barcelona",
     "Burgos", "Cáceres", "Cádiz", "Cantabria", "Castellón", "Ciudad Real", "Córdoba", "Cuenca",
     "Gerona", "Granada", "Guadalajara", "Guipúzcoa", "Huelva", "Huesca", "Islas Baleares",
-    "Jaén", "La Coruña", "La Rioja", "Las Palmas", "León", "Lérida", "Lugo", "Madrid", "Málaga",
+    "Jaén", "La Rioja", "Las Palmas", "León", "Lérida", "Lugo", "Madrid", "Málaga",
     "Murcia", "Navarra", "Orense", "Palencia", "Pontevedra", "Salamanca", "Santa Cruz de Tenerife",
     "Segovia", "Sevilla", "Soria", "Tarragona", "Teruel", "Toledo", "Valencia", "Valladolid",
     "Vizcaya", "Zamora", "Zaragoza"
@@ -108,15 +112,13 @@ with st.form("datos usuario"):
 
 if submitted:
 
-    scaled_values = scaler.transform(np.array([[altitud, tempmaxima, humrelativa, ultimalluvia]]))
+    scaled_values = scaler.transform(pd.DataFrame([[altitud, tempmaxima, humrelativa, ultimalluvia]], columns=['altitud', 'tempmaxima', 'humrelativa', 'diasultimalluvia']))
     altitud_r, tempmaxima_r, humrelativa_r, diasultimalluvia_r = scaled_values[0]
 
 
-    #deteccion_n = 1827.0
-
     provincias_lista = np.array([
     'Islas Baleares', 'Huesca', 'Santa Cruz de Tenerife', 'Cantabria',
-    'Zaragoza', 'Cáceres', 'Badajoz', 'Gipúzkoa', 'Navarra', 'Huelva',
+    'Zaragoza', 'Cáceres', 'Badajoz', 'Gipúzcoa', 'Navarra', 'Huelva',
     'Granada', 'Las Palmas', 'Jaén', 'Teruel', 'Málaga', 'Cádiz',
     'La Rioja', 'Córdoba', 'Asturias', 'Vizcaya', 'Almería', 'Madrid',
     'Valencia', 'Sevilla', 'Álava', 'Murcia', 'Alicante', 'Castellón',
@@ -131,7 +133,7 @@ if submitted:
     provincia_n = provincias_dict[provincia]
 
 
-    mesdeteccion_n = pd.factorize([mesdeteccion])[0][0]
+    mesdeteccion_n = pd.factorize(pd.Series(mesdeteccion))[0][0]
 
     horadeteccion_dict = {
         "Tarde": 0,
