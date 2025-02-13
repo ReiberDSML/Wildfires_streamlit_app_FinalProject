@@ -150,11 +150,11 @@ if submitted:
 
     if prob < 0:
         st.error(f"🚫 Introduzca otra ubicación.")
-    elif 0 <= prob <= 19:
+    elif 0 <= prob < 20:
         st.success(f'El riesgo de un incendio forestal es del {prob:.2f}% - **Riesgo Bajo** 🟩')
-    elif 20 <= prob <= 39:
+    elif 20 <= prob < 40:
         st.warning(f'El riesgo de un incendio forestal es del {prob:.2f}% - **Riesgo Medio** 🟩🟨')
-    elif 40 <= prob <= 59:
+    elif 40 <= prob < 60:
         st.warning(f'El riesgo de un incendio forestal es del {prob:.2f}% - **Riesgo Alto** 🟩🟨🟧')
     else:
         st.error(f'El riesgo de un incendio forestal es del {prob:.2f}% - **Riesgo Extremo** 🟩🟨🟧🟥')
