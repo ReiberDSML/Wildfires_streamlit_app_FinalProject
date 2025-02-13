@@ -112,7 +112,7 @@ if submitted:
     altitud_r, tempmaxima_r, humrelativa_r, diasultimalluvia_r = scaled_values[0]
 
 
-    deteccion_n = 1827.0
+    #deteccion_n = 1827.0
 
     provincias_lista = np.array([
     'Islas Baleares', 'Huesca', 'Santa Cruz de Tenerife', 'Cantabria',
@@ -143,12 +143,12 @@ if submitted:
     horadeteccion_n = horadeteccion_dict[horadeteccion]
 
 
-    user_input = np.array([[latitud, longitud, altitud_r, diasultimalluvia_r, deteccion_n, tempmaxima_r, humrelativa_r, provincia_n, mesdeteccion_n, horadeteccion_n]])
+    user_input = np.array([[latitud, longitud, altitud_r, diasultimalluvia_r, tempmaxima_r, humrelativa_r, provincia_n, mesdeteccion_n, horadeteccion_n]])
 
     prob = modelo.predict(user_input)[0]
 
     if prob < 0:
-        st.error(f"🚫 Introduzca otra ubicación. {prob:.2f}%")
+        st.error(f"🚫 Introduzca otra ubicación.")
     elif 0 <= prob <= 19:
         st.success(f'El riesgo de un incendio forestal es del {prob:.2f}% - **Riesgo Bajo** 🟩')
     elif 20 <= prob <= 39:
