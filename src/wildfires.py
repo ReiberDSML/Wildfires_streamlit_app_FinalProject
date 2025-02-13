@@ -38,20 +38,17 @@ st.write('Sistema inteligente que analiza datos ambientales en tiempo real para 
 
 #Mapa de incendios
 
-if "mapa" not in st.session_state:
-    #with st.expander("🗺️ Ver mapa de incendios", expanded=True):
-
-    st.subheader('🗺️ Mapa de incendios')
+@st.cache_data
+def generar_mapa():
     layer = pdk.Layer(
         "ScatterplotLayer",
         data=df,
-        get_position=["longitud", "latitud"],      # Asegúrate del orden: [longitud, latitud]
-        get_radius=500,                   # Radio en metros (puedes ajustarlo)
-        get_fill_color=[255, 0, 0, 160],    # Color rojo (RGBA)
+        get_position=["longitud", "latitud"],
+        get_radius=500,
+        get_fill_color=[255, 0, 0, 160],
         pickable=True
     )
 
-    #Centrar el mapa en el centro de España
     view_state = pdk.ViewState(
         latitude=40,
         longitude=-3,
@@ -59,15 +56,16 @@ if "mapa" not in st.session_state:
         pitch=0
     )
 
-    # Crear el mapa con pydeck
-    deck = pdk.Deck(
+    return pdk.Deck(
         map_style='mapbox://styles/mapbox/light-v9',
         initial_view_state=view_state,
         layers=[layer],
         tooltip={"text": "Incendio"}
     )
 
-st.pydeck_chart(deck)
+# Mostrar el mapa solo una vez
+st.subheader('🗺️ Mapa de incendios')
+st.pydeck_chart(generar_mapa())
 st.text('Ubicación de los incendios registrados en España entre 1968 y 2016')
 
 with st.form("datos usuario"):
@@ -117,9 +115,33 @@ if submitted:
 
     deteccion_n = 1827.0
 
-    provincia_n = pd.factorize([provincia])[0][0]
-    horadeteccion_n = pd.factorize([horadeteccion])[0][0]
-    mesdeteccion_n = pd.factorize([mesdeteccion])[0][0]
+    provincias_lista = np.array([
+    'Islas Baleares', 'Huesca', 'Santa Cruz de Tenerife', 'Cantabria',
+    'Zaragoza', 'Cáceres', 'Badajoz', 'Gipúzkoa', 'Navarra', 'Huelva',
+    'Granada', 'Las Palmas', 'Jaén', 'Teruel', 'Málaga', 'Cádiz',
+    'La Rioja', 'Córdoba', 'Asturias', 'Vizcaya', 'Almería', 'Madrid',
+    'Valencia', 'Sevilla', 'Álava', 'Murcia', 'Alicante', 'Castellón',
+    'Albacete', 'Ávila', 'Barcelona', 'Burgos', 'Ciudad Real',
+    'A Coruña', 'Cuenca', 'Girona', 'Guadalajara', 'León', 'Lleida',
+    'Lugo', 'Ourense', 'Palencia', 'Pontevedra', 'Salamanca',
+    'Segovia', 'Soria', 'Tarragona', 'Toledo', 'Valladolid', 'Zamora',
+    'Ceuta'
+    ])
+    
+    provincias_dict = {provincia: idx for idx, provincia in enumerate(provincias_lista)}
+    provincia_n = provincias_dict[provincia]
+
+
+    mesdeteccion_n = pd.factorize([mes])[0][0]
+
+    horadeteccion_dict = {
+        "Tarde": 0,
+        "Noche": 1,
+        "Madrugada": 2,
+        "Mañana": 3
+    }
+
+    horadeteccion_n = horadeteccion_dict[horadeteccion]
 
 
     user_input = np.array([[latitud, longitud, altitud_r, diasultimalluvia_r, deteccion_n, tempmaxima_r, humrelativa_r, provincia_n, mesdeteccion_n, horadeteccion_n]])
@@ -127,7 +149,7 @@ if submitted:
     prob = modelo.predict(user_input)[0]
 
     if prob < 0:
-        st.error("🚫 Introduzca otra ubicación.")
+        st.error(f"🚫 Introduzca otra ubicación. {prob:.2f}%")
     elif 0 <= prob <= 19:
         st.success(f'El riesgo de un incendio forestal es del {prob:.2f}% - **Riesgo Bajo** 🟩')
     elif 20 <= prob <= 39:
