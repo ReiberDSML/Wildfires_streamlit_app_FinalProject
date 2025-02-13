@@ -41,7 +41,6 @@ st.write('Sistema inteligente que analiza datos ambientales en tiempo real para 
 
 
 #Mapa de incendios
-@st.cache_data
 def generar_mapa():
     layer = pdk.Layer(
         "ScatterplotLayer",
